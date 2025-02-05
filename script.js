@@ -1,6 +1,6 @@
 let chances = 3,
-  highestScore = 0,
   score = JSON.parse(localStorage.getItem("score")) || 0,
+  highestScore = JSON.parse(localStorage.getItem("highestScore")) || 0,
   randomNumber,
   colorArray = ["red", "blue", "green", "purple", "yellow", "orange"];
 
@@ -9,11 +9,21 @@ const elements = {
   gameSection: document.getElementById("game-section"),
   chancesSpan: document.getElementById("chances"),
   scoreSpan: document.getElementById("score"),
+  highestScoreDiv: document.getElementById("highest-score"),
   chosenColorDiv: document.getElementById("chosen-color"),
   chosenColorName: document.getElementById("chosen-color-name"),
   restartGameBtn: document.getElementById("restartGame"),
+  resetGameBtn: document.getElementById("resetGame"),
   options: document.getElementById("options"),
   startGameBtn: document.getElementById("startGame"),
+};
+
+const audios = {
+  click: new Audio("click.mp3"),
+  error: new Audio("error.mp3"),
+  game_over: new Audio("game-over.mp3"),
+  start_game: new Audio("start-game.mp3"),
+  success: new Audio("success.mp3"),
 };
 
 const setSuccess = () => {
@@ -40,16 +50,19 @@ const gameOver = () => {
     option.style.cursor = "not-allowed";
   });
   elements.restartGameBtn.style.display = "block";
+  audios.game_over.play();
 };
 
 const checkOption = (opt) => {
   const pickedGuess = colorArray[randomNumber];
   if (opt === pickedGuess) {
+    audios.success.play();
     setMessage(`Correct! Guessed color is ${opt}!`, "green");
     setSuccess();
     increaseScore();
     gameOver();
   } else {
+    audios.error.play();
     chances -= 1;
     if (chances > 0) {
       setMessage(
@@ -79,7 +92,13 @@ const startGame = () => {
   elements.welcomeSection.classList.replace("active", "inactive");
   elements.chancesSpan.textContent = `0${chances}`;
   elements.scoreSpan.textContent = `0${score}`;
+  elements.highestScoreDiv.textContent = `0${highestScore}`;
   sortGuesses();
+  audios.start_game.play();
+
+  if (score > 0) {
+    elements.resetGameBtn.style.display = "block";
+  }
 };
 
 const restartGame = () => {
@@ -94,6 +113,20 @@ const restartGame = () => {
   });
   chances = 3;
   elements.chancesSpan.textContent = `0${chances}`;
+  audios.start_game.play();
+  if (score > 0) {
+    elements.resetGameBtn.style.display = "block";
+  }
+};
+
+const startNewGame = () => {
+  if (highestScore == 0 || highestScore < score) {
+    console.log("true");
+    highestScore = score;
+    localStorage.setItem("highestScore", highestScore);
+  }
+  localStorage.setItem("score", 0);
+  window.location.reload();
 };
 
 elements.startGameBtn.addEventListener("click", startGame);

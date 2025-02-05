@@ -76,6 +76,14 @@
             >
           </p>
           <p>
+            <span class="text-sm font-semibold">Highest Score: </span>
+            <span
+              class="font-bold p-2 px-3 rounded-md bg-green-400/20"
+              id="highest-score"
+              >10</span
+            >
+          </p>
+          <p>
             <span class="text-sm font-semibold" data-testid="score"
               >Total Scores:
             </span>
@@ -115,6 +123,14 @@
             Play Again!
           </button>
         </div>
+        <button
+          data-testid="newGameButton"
+          class="w-full py-4 rounded-full bg-green-400 cursor-pointer font-semibold text-white hover:scale-105 active:scale-95 transition shadow-lg mt-7 hidden"
+          id="resetGame"
+          onclick="startNewGame()"
+        >
+          Reset Game!
+        </button>
       </section>
     </div>
 
